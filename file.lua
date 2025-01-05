@@ -4,6 +4,7 @@ BringMobs = true
 DisFarm = 25
 _G.SelectMonster = nil
 AutoFarmType = "Above"
+FastAttackSelected = "Normal"
 local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
 local CombatController = require(game:GetService("ReplicatedStorage").Controllers.CombatController)
 
@@ -1122,6 +1123,17 @@ Fluent:Notify({
 
 Window:SelectTab(1)
 
+-- buso haki
+spawn(function()
+    while wait() do
+        if getgenv.BusoHaki then
+            if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
+            end
+        end
+    end
+end)
+
 -- farm mode
 spawn(function()
     while wait() do
@@ -1179,7 +1191,100 @@ spawn(function()
     end
 end)
 
+-- bringmonster
+spawn(function()
+    while task.wait() do
+        if BringMobs and (LevelFarmQuest or LevelFarmNoQuest) then
+            pcall(function()
+                BringMonster(Level_Farm_Name, Level_Farm_CFrame)
+            end)
 
+        elseif BringMobs and Farm_Bone then
+            pcall(function()
+                BringMonster(Bone_Farm_Name, Bone_Farm_CFrame)
+            end)
+
+        elseif BringMobs and Farm_Ectoplasm then
+            pcall(function()
+                BringMonster(Ecto_Farm_Name, Ecto_Farm_CFrame)
+            end)
+
+        elseif BringMobs and Nearest_Farm then
+            pcall(function()
+                BringMonster(Nearest_Farm_Name, Nearest_Farm_CFrame)
+            end)
+
+        elseif BringMobs and (SelectMonster_Quest_Farm or SelectMonster_NoQuest_Farm) then
+            pcall(function()
+                BringMonster(SelectMonster_Farm_Name, SelectMonster_Farm_CFrame)
+            end)
+
+        elseif BringMobs and Auto_Farm_Material then
+            pcall(function()
+                BringMonster(Material_Farm_Name, Material_Farm_CFrame)
+            end)
+
+        elseif BringMobs and (GunMastery_Farm or DevilMastery_Farm) then
+            pcall(function()
+                BringMonster(Mastery_Farm_Name, Mastery_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoRengoku then
+            pcall(function()
+                BringMonster(Rengoku_Farm_Name, Rengoku_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoCakePrince then
+            pcall(function()
+                BringMonster(CakePrince_Farm_Name, CakePrince_Farm_CFrame)
+            end)
+
+        elseif BringMobs and _G.AutoDoughKing then
+            pcall(function()
+                BringMonster(DoughKing_Farm_Name, DoughKing_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoCitizen then
+            pcall(function()
+                BringMonster(Citizen_Farm_Name, Citizen_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoEvoRace then
+            pcall(function()
+                BringMonster(EvoV2_Farm_Name, EvoV2_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoBartilo then
+            pcall(function()
+                BringMonster(Bartilo_Farm_Name, Bartilo_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoSoulGuitar then
+            pcall(function()
+                BringMonster(SoulGuitar_Farm_Name, SoulGuitar_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoMusketeer then
+            pcall(function()
+                BringMonster(Musketere_Farm_Name, Musketere_Farm_CFrame)
+            end)
+            
+        elseif BringMobs and AutoTrain then
+            pcall(function()
+                BringMonster(Ancient_Farm_Name, Ancient_Farm_CFrame)
+            end)
+
+        elseif BringMobs and AutoPirateCastle then
+            pcall(function()
+                BringMonster(PirateCastle_Name, PirateCastle_CFrame)
+            end)
+        elseif BringMobs and BlazeEmberFarm then
+            pcall(function()
+                BringMonster(BlazeEmber_Farm_Name, BlazeEmber_Farm_CFrame)
+            end)
+        end
+    end
+end)
 --BringMonster("Bandit",game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0,-10,0))
 
 --[[
