@@ -1087,9 +1087,9 @@ local Window = Fluent:CreateWindow({
 local Tab = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
 	Shop = Window:AddTab({Title = "Shop", Icon =""}),
-	Stat = Window:AddTab({ Title = "Stat", Icon = "chart-column-big" }),
+	Stat = Window:AddTab({ Title = "Stat", Icon = "" }),
 	Misc = Window:AddTab({ Title = "Misc", Icon = "" }),
-    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+    Settings = Window:AddTab({ Title = "Settings", Icon = "" })
 }
 
 local Options = Fluent.Options
@@ -1201,9 +1201,9 @@ spawn(function()
                     if ByPassTP then
                         BTP(CFrameQ)
                     elseif not ByPassTP then
-                        Tween(CFrameQ)
+                        Tween(CFrameQ + Vector3.new(0,5,0))
                     end
-                    if (CFrameQ.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 5 then
+                    if (CFrameQ.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 15 then
                         wait(1)
                         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest", NameQuest, QuestLv)
                     end
