@@ -10,6 +10,16 @@ FastAttackSelected = "Normal"
 local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
 local CombatController = require(game:GetService("ReplicatedStorage").Controllers.CombatController)
 
+-- auto ken haki
+function AutoKen()
+local args = {
+    [1] = "Ken",
+    [2] = true
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommE"):FireServer(unpack(args))
+end
+
 -- weapon
 task.spawn(function()
     while wait() do
@@ -1086,6 +1096,7 @@ local Window = Fluent:CreateWindow({
 -- Fluent provides Lucide Icons, they are optional
 local Tab = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
+	Quest = Window:AddTab({ Title = "Quest", Icon = "" }),
 	Shop = Window:AddTab({Title = "Shop", Icon =""}),
 	Stat = Window:AddTab({ Title = "Stat", Icon = "" }),
 	Misc = Window:AddTab({ Title = "Misc", Icon = "" }),
@@ -1104,9 +1115,47 @@ local Toggle = Tab.Main:AddToggle("Auto Farm Level",
     Callback = function(state)
     LevelFarmQuest = state
     _G.SelectMonster  = nil
-    --CancelTween(LevelFarmQuest)
+	if state then
+    	CancelTween(LevelFarmQuest)
+	end
     end 
 })
+
+-- Quest
+
+local Toggle = Tab.Quest:AddToggle("Auto Bartilo", 
+{
+    Title = "Auto Bartilo", 
+    Description = "Auto Do Bartilo Quest",
+    Default = false,
+    Callback = function(state)
+    AutoBartilo = state
+	if state then
+    	CancelTween(AutoBartilo)
+	end
+    if game.Players.LocalPlayer.Backpack:FindFirstChild("Warrior Helmet") then
+        Success = true
+    elseif game.Players.LocalPlayer.Character:FindFirstChild("Warrior Helmet") then
+        Success = true
+    end
+    
+    end 
+})
+
+local Toggle = Tab.Quest:AddToggle("Auto Bartilo", 
+{
+    Title = "Auto Don Swan", 
+    Description = "Auto Kill Don Swan",
+    Default = false,
+    Callback = function(state)
+    _G.SwanGlasses = state
+	if state then
+    	CancelTween(_G.SwanGlasses)
+	end
+    
+    end 
+})
+
 -- Shop
 
   local Toggle = Tab.Shop:AddToggle("Auto Buy Fruit", 
@@ -1137,6 +1186,16 @@ Tab.Shop:AddButton({
 
 StartDialog("FruitShop2")
 end
+})
+
+local Toggle = Tab.Settings:AddToggle("AutoKen", 
+{
+    Title = "Auto Ken", 
+    Description = "Toggle description",
+    Default = true,
+    Callback = function(state)
+	  AutoKen = state
+    end 
 })
 
 local Toggle = Tab.Settings:AddToggle("MyToggle", 
@@ -1174,6 +1233,14 @@ spawn(function()
             if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
             end
+        end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        if AutoKen == true then
+		AutoKen()
         end
     end
 end)
@@ -1329,6 +1396,126 @@ spawn(function()
         end
     end
 end)
+
+-- auto bartilo
+spawn(function()
+    while task.wait() do
+        if AutoBartilo then
+            pcall(function()
+                if game.Players.LocalPlayer.Data.Level.Value >= 850 and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 0 then
+                    if string.find(game.Players.LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, "Swan Pirates") and string.find(game.Players.LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, "50") and game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == true then 
+                        if game:GetService("Workspace").Enemies:FindFirstChild("Swan Pirate") then
+                            for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                                if v.Name == "Swan Pirate" then
+                                    repeat game:GetService("RunService").Heartbeat:wait()
+                                        EquipTool(SelectWeapon)
+                                        Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                        v.HumanoidRootPart.CanCollide = false
+                                        v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+                                        v.HumanoidRootPart.Transparency = 1
+                                        v.Humanoid:ChangeState(11)
+                                        v.Humanoid:ChangeState(14)
+                                        Bartilo_Farm_Name = v.Name
+                                        Bartilo_Farm_CFrame = v.HumanoidRootPart.CFrame
+                                        AutoClick()
+                                    until not v.Parent or v.Humanoid.Health <= 0 or AutoBartilo == false or game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == false or not game:GetService("Workspace").Enemies:FindFirstChild(v.Name)
+                                end
+                            end
+                        else
+                            if ByPassTP then
+                                BTP(CFrame.new(1057.92761, 137.614319, 1242.08069))
+                            else
+                                Tween(CFrame.new(1057.92761, 137.614319, 1242.08069))
+                            end
+                        end
+                    else
+                        Tween(CFrame.new(-456.28952, 73.0200958, 299.895966))
+                        if (Vector3.new(-456.28952, 73.0200958, 299.895966) - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 30 then
+                            wait(1.1)
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest","BartiloQuest",1)
+                        end
+                    end
+                elseif game.Players.LocalPlayer.Data.Level.Value >= 850 and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 1 then
+                    if QuestBartilo == nil then
+                        Tween(CFrame.new(-456.28952, 73.0200958, 299.895966))
+                    end
+                    if (Vector3.new(-456.28952, 73.0200958, 299.895966) - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 30 then
+                        wait(1.1)
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo")
+                        QuestBartilo = 1
+                    end
+                    if game.Workspace.Enemies:FindFirstChild("Jeremy") then
+                        for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                            if v.Name == "Jeremy" then
+                                repeat game:GetService("RunService").Heartbeat:wait()
+                                    EquipTool(SelectWeapon)
+                                    Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                    v.HumanoidRootPart.CanCollide = false
+                                    v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+                                    v.HumanoidRootPart.Transparency = 1
+                                    v.Humanoid:ChangeState(11)
+                                    v.Humanoid:ChangeState(14)
+                                    AutoClick()
+                                until not v.Parent or v.Humanoid.Health <= 0 or AutoBartilo == false or not game:GetService("Workspace").Enemies:FindFirstChild(v.Name)
+                            end
+                        end
+                    else
+                        Tween(CFrame.new(1931.5931396484, 402.67391967773, 956.52215576172))
+                        if QuestBartilo == 1 then
+                            Tween(CFrame.new(1931.5931396484, 402.67391967773, 956.52215576172))
+                        end
+                    end
+                elseif game.Players.LocalPlayer.Data.Level.Value >= 850 and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 2 then
+                    Tween(game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate1.CFrame)
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate2.CFrame
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate3.CFrame
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate4.CFrame
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate5.CFrame
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate6.CFrame
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate7.CFrame
+                    wait(1)
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate8.CFrame
+                    wait(1)
+                end
+            end)
+        end 
+    end
+end)
+
+-- Auto Don Swan
+spawn(function()
+    while task.wait() do
+        if _G.SwanGlasses then
+            if game:GetService("Workspace").Enemies:FindFirstChild("Don Swan") then
+                for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                    if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                        if v.Name == "Don Swan" then
+                            repeat game:GetService("RunService").Heartbeat:wait()
+                                EquipTool(SelectWeapon)
+                                Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                AutoClick()
+                            until _G.SwanGlasses == false or v.Humanoid.Health <= 0 or not v.Parent
+                        end
+                    end
+                end
+            else
+                if ByPassTP then
+                    BTP(CFrame.new(2191.1674804688, 15.177842140198, 694.69873046875))
+                else
+                    Tween(CFrame.new(2191.1674804688, 15.177842140198, 694.69873046875))
+                end
+            end
+        end
+    end
+end)
+
+
 --BringMonster("Bandit",game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0,-10,0))
 
 --[[
