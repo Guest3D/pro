@@ -1,4 +1,5 @@
 --// Local
+WalkOnWater = true
 bringfrec = 250
 BusoHaki = true
 AutoKen = true
@@ -1148,6 +1149,34 @@ local Toggle = Tab.Quest:AddToggle("Auto Bartilo",
     end 
 })
 
+local Toggle = Tab.Quest:AddToggle("Auto Second Sea", 
+{
+    Title = "Auto Second Sea", 
+    Description = "Auto Second World",
+    Default = false,
+    Callback = function(state)
+    AutoSecondWorld = sate
+	if state then
+    	CancelTween(AutoSecondWorld)
+	end
+    
+    end 
+})
+
+local Toggle = Tab.Quest:AddToggle("Auto Third Sea", 
+{
+    Title = "Auto Third Sea", 
+    Description = "Auto Third World",
+    Default = false,
+    Callback = function(state)
+    AutoThirdWorld = sate
+	if state then
+    	CancelTween(AutoThirdWorld)
+	end
+    
+    end 
+})
+
 -- Shop
 
   local Toggle = Tab.Shop:AddToggle("Auto Buy Fruit", 
@@ -1182,18 +1211,18 @@ end
 
 local Toggle = Tab.Settings:AddToggle("AutoKen", 
 {
-    Title = "Auto Ken", 
-    Description = "Toggle description",
+    Title = "Walk On Water", 
+    Description = "Waer",
     Default = true,
     Callback = function(state)
-	  getgenv().AutoKen = state
+	  WalkOnWater = state
     end 
 })
 
 local Toggle = Tab.Settings:AddToggle("MyToggle", 
 {
     Title = "Auto BusoHaki", 
-    Description = "Toggle description",
+    Description = "self explanatory",
     Default = true,
     Callback = function(state)
 	  getgenv().BusoHaki = state
@@ -1203,7 +1232,7 @@ local Toggle = Tab.Settings:AddToggle("MyToggle",
 local Toggle = Tab.Settings:AddToggle("Toggle", 
 {
     Title = "BypassTP", 
-    Description = "Auto Farm Level with quest",
+    Description = "Bypass Teleport",
     Default = false,
     Callback = function(state)
       ByPassTP = Value
@@ -1221,7 +1250,7 @@ Window:SelectTab(1)
 -- buso haki
 spawn(function()
     while wait() do
-        if getgenv().BusoHaki == true then
+        if BusoHaki == true then
             if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
             end
@@ -1230,9 +1259,11 @@ spawn(function()
 end)
 
 spawn(function()
-    while wait() do
-        if getgenv().AutoKen == true then
-		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommE"):FireServer("Ken", true)
+    while task.wait() do
+        if WalkOnWater then
+            game:GetService("Workspace").Map["WaterBase-Plane"].Size = Vector3.new(1000,112,1000)
+        else
+            game:GetService("Workspace").Map["WaterBase-Plane"].Size = Vector3.new(1000,80,1000)
         end
     end
 end)
@@ -1507,6 +1538,200 @@ spawn(function()
     end
 end)
 
+-- auto second sea
+spawn(function()
+    while task.wait() do
+        if AutoSecondWorld then
+            pcall(function()
+                if game.Players.LocalPlayer.Data.Level.Value >= 700 then
+                    if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DressrosaQuestProgress").UsedKey == false then
+                        if not game.Players.LocalPlayer.Backpack:FindFirstChild("Key") or not game.Players.LocalPlayer.Character:FindFirstChild("Key") then
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DressrosaQuestProgress","Detective")
+                        elseif game.Players.LocalPlayer.Backpack:FindFirstChild("Key") or game.Players.LocalPlayer.Character:FindFirstChild("Key") then
+                            game.Players.LocalPlayer.Character.Humanoid:EquipTool(game.Players.LocalPlayer.Backpack["Key"])
+                            --[[if ByPassTP then
+                                BTP(CFrame.new(1349.697265625, 37.34928512573242, -1328.8309326171875))
+                                game:GetService("Workspace").Map.Ice.Door.Size = Vector3.new(30,30,30)
+                            elseif not ByPassTP then
+                                Tween(CFrame.new(1349.697265625, 37.34928512573242, -1328.8309326171875))
+                                game:GetService("Workspace").Map.Ice.Door.Size = Vector3.new(30,30,30)
+                            end]]
+                            Tween(CFrame.new(1347.65271, 37.3906517, -1325.07715, 0.484830558, 2.71348792e-08, 0.874608099, -2.34559963e-08, 1, -1.80225808e-08, -0.874608099, -1.17769057e-08, 0.484830558))
+                        end
+                    elseif game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DressrosaQuestProgress").UsedKey == true then
+                        if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DressrosaQuestProgress").KilledIceBoss == false then
+                            for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                                if v.Name == "Ice Admiral" then
+                                    EquipTool(SelectWeapon)
+                                    Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                    AutoClick()
+                                end
+                            end
+                            for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
+                                if v.Name == "Ice Admiral" then
+                                    Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                end
+                            end
+                        elseif game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DressrosaQuestProgress").KilledIceBoss == true then
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+-- auto third sea
+spawn(function()
+    while task.wait() do
+        if AutoThirdWorld then
+            pcall(function()
+                if game.Players.LocalPlayer.Data.Level.Value >= 1500 then
+                    if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 3 then
+                        if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("GetUnlockables").FlamingoAccess == nil then
+                            if game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("ZQuestProgress", "Check") == nil then
+                                if game.Workspace.Enemies:FindFirstChild("Don Swan") then
+                                    for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                                        if v.Name == "Don Swan" and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                                            repeat game:GetService("RunService").Heartbeat:wait()
+                                                EquipTool(SelectWeapon)
+                                                Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                                AutoClick()
+                                            until not v.Parent or v.Humanoid.Health <= 0 or not AutoThirdWorld
+                                        end
+                                    end
+                                else
+                                    Tween(CFrame.new(2288.802, 15.1870775, 863.034607))
+                                end
+                            elseif game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("ZQuestProgress", "Check") == 1 then
+                                if game.Workspace.Enemies:FindFirstChild("rip_indra") then
+                                    for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                                        if v.Name == "rip_indra" and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                                            repeat game:GetService("RunService").Heartbeat:wait()
+                                                EquipTool(SelectWeapon)
+                                                Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                                AutoClick()
+                                            until not v.Parent or v.Humanoid.Health <= 0 or not AutoThirdWorld
+                                        end
+                                    end
+                                else
+                                    Tween(CFrame.new(-26952.2891, 21.5294781, 329.351562, -0.453972578, 0, -0.891015649, 0, 1, 0, 0.891015649, 0, -0.453972578))
+                                end
+                            end
+                        
+                            TabelDevilFruitStore = {}
+                            TabelDevilFruitOpen = {}
+                            for i,v in pairs(game:GetService("ReplicatedStorage").Remotes["CommF_"]:InvokeServer("getInventoryFruits")) do
+                                for i1,v1 in pairs(v) do
+                                    if i1 == "Name" then
+                                        table.insert(TabelDevilFruitStore,v1)
+                                    end
+                                end
+                            end
+                            for i,v in next,game.ReplicatedStorage:WaitForChild("Remotes").CommF_:InvokeServer("GetFruits") do
+                                if v.Price >= 1000000 then
+                                    table.insert(TabelDevilFruitOpen,v.Name)
+                                end
+                            end
+                            for i,DevilFruitOpenDoor in pairs(TabelDevilFruitOpen) do
+                                for i1,DevilFruitStore in pairs(TabelDevilFruitStore) do
+                                    if DevilFruitOpenDoor == DevilFruitStore and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("GetUnlockables").FlamingoAccess == nil then
+                                        if not game.Players.LocalPlayer.Backpack:FindFirstChild(DevilFruitStore) then
+                                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("LoadFruit",DevilFruitStore)
+                                        else
+                                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TalkTrevor","1")
+                                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TalkTrevor","2")
+                                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TalkTrevor","3")
+                                        end
+                                    end
+                                end
+                            end
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TalkTrevor","1")
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TalkTrevor","2")
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TalkTrevor","3")
+                        elseif game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("GetUnlockables").FlamingoAccess == true then
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+                        end
+                    elseif game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 0 then
+                        if string.find(game.Players.LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, "Swan Pirates") and string.find(game.Players.LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, "50") and game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == true then 
+                            if game:GetService("Workspace").Enemies:FindFirstChild("Swan Pirate") then
+                                for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                                    if v.Name == "Swan Pirate" then
+                                        repeat game:GetService("RunService").Heartbeat:wait()
+                                            EquipTool(SelectWeapon)
+                                            Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                            v.HumanoidRootPart.CanCollide = false
+                                            v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+                                            v.HumanoidRootPart.Transparency = 1
+                                            v.Humanoid:ChangeState(11)
+                                            v.Humanoid:ChangeState(14)
+                                            AutoClick()
+                                        until not v.Parent or v.Humanoid.Health <= 0 or game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == false or not AutoThirdWorld
+                                    end
+                                end
+                            else
+                                if ByPassTP then
+                                    BTP(CFrame.new(1057.92761, 137.614319, 1242.08069))
+                                else
+                                    Tween(CFrame.new(1057.92761, 137.614319, 1242.08069))
+                                end
+                            end
+                        else
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest","BartiloQuest",1)
+                        end
+                    elseif game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 1 then
+                        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo")
+                        if game.Workspace.Enemies:FindFirstChild("Jeremy") then
+                            for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                                if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                                    if v.Name == "Jeremy" then
+                                        repeat game:GetService("RunService").Heartbeat:wait()
+                                            EquipTool(SelectWeapon)
+                                            Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
+                                            AutoClick()
+                                        until not v.Parent or v.Humanoid.Health <= 0 or not AutoThirdWorld
+                                    end
+                                end
+                            end
+                        else
+                            if ByPassTP then
+                                BTP(CFrame.new(2099.88159, 448.931, 648.997375))
+                            else
+                                Tween(CFrame.new(2099.88159, 448.931, 648.997375))
+                            end
+                        end
+                    elseif game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 2 then
+                        if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - CFrameThird.Position).Magnitude > 1500 then
+                            if ByPassTP then
+                                BTP(CFrame.new(-1836.1412353515625, 10.458294868469238, 1692.491943359375))
+                            else
+                                Tween(CFrame.new(-1836.1412353515625, 10.458294868469238, 1692.491943359375))
+                            end
+                        else
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1850.49329, 13.1789551, 1750.89685)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1858.87305, 19.3777466, 1712.01807)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1803.94324, 16.5789185, 1750.89685)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1858.55835, 16.8604317, 1724.79541)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1869.54224, 15.987854, 1681.00659)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1800.0979, 16.4978027, 1684.52368)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1819.26343, 14.795166, 1717.90625)
+                            wait(1)
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1813.51843, 14.8604736, 1724.79541)
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
 
 --BringMonster("Bandit",game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0,-10,0))
 
