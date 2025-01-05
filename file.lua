@@ -1032,7 +1032,8 @@ local Window = Fluent:CreateWindow({
 -- Fluent provides Lucide Icons, they are optional
 local Tab = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
-	  Shop = Window:AddTab({Title = "Shop", Icon =""}),
+	Shop = Window:AddTab({Title = "Shop", Icon =""}),
+	Misc = Window:AddTab({ Title = "Misc", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
@@ -1048,7 +1049,7 @@ local Toggle = Tab.Main:AddToggle("Auto Farm Level",
     Callback = function(state)
     LevelFarmQuest = state
     _G.SelectMonster  = nil
-    CancelTween(LevelFarmQuest)
+    --CancelTween(LevelFarmQuest)
     end 
 })
 -- Shop
