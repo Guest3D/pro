@@ -1,6 +1,7 @@
 --// Local
 bringfrec = 250
 BusoHaki = true
+AutoKen = true
 BringMobs = true
 DisFarm = 25
 _G.SelectMonster = nil
@@ -10,15 +11,6 @@ FastAttackSelected = "Normal"
 local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
 local CombatController = require(game:GetService("ReplicatedStorage").Controllers.CombatController)
 
--- auto ken haki
-function AutoKen()
-local args = {
-    [1] = "Ken",
-    [2] = true
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommE"):FireServer(unpack(args))
-end
 
 -- weapon
 task.spawn(function()
@@ -1194,7 +1186,7 @@ local Toggle = Tab.Settings:AddToggle("AutoKen",
     Description = "Toggle description",
     Default = true,
     Callback = function(state)
-	  AutoKen = state
+	  getgenv().AutoKen = state
     end 
 })
 
@@ -1239,8 +1231,8 @@ end)
 
 spawn(function()
     while wait() do
-        if AutoKen == true then
-		AutoKen()
+        if getgenv().AutoKen == true then
+		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommE"):FireServer("Ken", true)
         end
     end
 end)
