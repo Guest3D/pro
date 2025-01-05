@@ -1126,7 +1126,7 @@ Window:SelectTab(1)
 -- buso haki
 spawn(function()
     while wait() do
-        if getgenv.BusoHaki then
+        if getgenv().BusoHaki then
             if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
             end
