@@ -1087,6 +1087,7 @@ local Window = Fluent:CreateWindow({
 local Tab = {
     Main = Window:AddTab({ Title = "Main", Icon = "" }),
 	Shop = Window:AddTab({Title = "Shop", Icon =""}),
+	Stat = Window:AddTab({ Title = "Stat", Icon = "chart-column-big" }),
 	Misc = Window:AddTab({ Title = "Misc", Icon = "" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
