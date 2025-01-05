@@ -1,12 +1,55 @@
 --// Local
 bringfrec = 250
+BusoHaki = true
 BringMobs = true
 DisFarm = 25
 _G.SelectMonster = nil
 AutoFarmType = "Above"
+SelectWeaponFarm = "Melee"
 FastAttackSelected = "Normal"
 local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
 local CombatController = require(game:GetService("ReplicatedStorage").Controllers.CombatController)
+
+-- weapon
+task.spawn(function()
+    while wait() do
+        pcall(function()
+            if SelectWeaponFarm == "Melee" then
+                for i ,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v.ToolTip == "Melee" then
+                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v.Name)) then
+                            SelectWeapon = v.Name
+                        end
+                    end
+                end
+            elseif SelectWeaponFarm == "Sword" then
+                for i ,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v.ToolTip == "Sword" then
+                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v.Name)) then
+                            SelectWeapon = v.Name
+                        end
+                    end
+                end
+            elseif SelectWeaponFarm == "Blox Fruit" then
+                for i ,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v.ToolTip == "Blox Fruit" then
+                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v.Name)) then
+                            SelectWeapon = v.Name
+                        end
+                    end
+                end
+            elseif SelectWeaponFarm == "Gun" then
+                for i ,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                    if v.ToolTip == "Gun" then
+                        if game.Players.LocalPlayer.Backpack:FindFirstChild(tostring(v.Name)) then
+                            SelectWeapon = v.Name
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
 
 spawn(function()
     while task.wait() do
@@ -1126,7 +1169,7 @@ Window:SelectTab(1)
 -- buso haki
 spawn(function()
     while wait() do
-        if getgenv().BusoHaki then
+        if getgenv().BusoHaki == true then
             if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Buso")
             end
@@ -1143,7 +1186,7 @@ spawn(function()
             Farm_Mode = CFrame.new(0,2,DisFarm) * CFrame.Angles(math.rad(0),0,0)
         end
     end
-end)]]
+end)
 
 
 -- LEVEL FARM QUEST -- 
@@ -1173,11 +1216,11 @@ spawn(function()
                                         EquipTool(SelectWeapon)
                                         Tween(v.HumanoidRootPart.CFrame * Farm_Mode)
                                         v.HumanoidRootPart.CanCollide = false
-                                        v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+                                        --v.HumanoidRootPart.Size = Vector3.new(60,60,60)
                                         v.HumanoidRootPart.Transparency = 1
                                         Level_Farm_Name = v.Name
                                         Level_Farm_CFrame = v.HumanoidRootPart.CFrame
-                                        AutoClick()
+                                        FastAttacked()
                                     until not LevelFarmQuest or not v.Parent or v.Humanoid.Health <= 0 or not game:GetService("Workspace").Enemies:FindFirstChild(v.Name) or game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == false
                                 end
                             end
