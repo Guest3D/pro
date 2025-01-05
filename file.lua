@@ -1,9 +1,19 @@
 --// Local
 bringfrec = 250
 BringMobs = true
+DisFarm = 25
 _G.SelectMonster = nil
+AutoFarmType = "Above"
 local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
 local CombatController = require(game:GetService("ReplicatedStorage").Controllers.CombatController)
+
+spawn(function()
+    while task.wait() do
+        pcall(function()
+            Farm_Mode = CFrame.new(0,DisFarm,0)
+        end)
+    end
+end)
 
 --// World Check
 First_Sea = false
@@ -1111,6 +1121,18 @@ Fluent:Notify({
 })
 
 Window:SelectTab(1)
+
+-- farm mode
+spawn(function()
+    while wait() do
+        if AutoFarmType == "Above" then
+            Farm_Mode = CFrame.new(0,DisFarm,0) * CFrame.Angles(math.rad(-90),0,0)
+        elseif AutoFarmType == "Beside" then
+            Farm_Mode = CFrame.new(0,2,DisFarm) * CFrame.Angles(math.rad(0),0,0)
+        end
+    end
+end)]]
+
 
 -- LEVEL FARM QUEST -- 
 spawn(function()
